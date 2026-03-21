@@ -1,0 +1,21 @@
+[package]
+name = "screenshot-mcp"
+version = "0.1.0"
+edition = "2024"
+description = "A Model Context Protocol (MCP) server for taking cross-platform screenshots of windows, monitors, and processes."
+license = "MIT"
+repository = "https://github.com/screenshot-mcp/screenshot-mcp"
+keywords = ["mcp", "screenshot", "ai", "llm"]
+categories = ["command-line-utilities"]
+
+[dependencies]
+base64 = "0.22.1"
+image = "0.25.1"
+async-trait = "0.1.74"
+rust-mcp-sdk = { version = "0.9.0", features = ["stdio", "macros"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0.117"
+sysinfo = "0.33.1"
+tokio = { version = "1.37.0", features = ["full", "macros", "rt-multi-thread"] }
+xcap = { version = "0.9", features = ["image"] }
+mcp-sdk = "0.0.3"
