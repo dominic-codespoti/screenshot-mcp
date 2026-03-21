@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2024"
 description = "A Model Context Protocol (MCP) server for taking cross-platform screenshots of windows, monitors, and processes."
 license = "MIT"
-repository = "https://github.com/screenshot-mcp/screenshot-mcp"
+repository = "https://github.com/dominic-codespoti/screenshot-mcp"
 keywords = ["mcp", "screenshot", "ai", "llm"]
 categories = ["command-line-utilities"]
 
