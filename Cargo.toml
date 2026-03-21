@@ -1,6 +1,6 @@
 [package]
 name = "screenshot-mcp"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 description = "A Model Context Protocol (MCP) server for taking cross-platform screenshots of windows, monitors, and processes."
 license = "MIT"
