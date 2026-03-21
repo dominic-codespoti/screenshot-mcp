@@ -12,16 +12,49 @@ Exposes two tools:
 cargo install screenshot-mcp
 ```
 
-## Adding to Cursor / Claude 
+## Adding to AI Clients
 
-In your MCP client configurations, just point to the binary:
+Because this server interacts purely through the standardized `stdio` MCP transport, you can plug it into any compatible AI assistant.
+
+### Claude Desktop
+
+1. Open your configuration file:
+   - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+   - **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+2. Add the server to the `mcpServers` object:
+
 ```json
 {
   "mcpServers": {
     "screenshot-mcp": {
-      "command": "screenshot-mcp"
+      "command": "/absolute/path/to/screenshot-mcp"
     }
   }
 }
 ```
+
+### Cursor
+
+1. Open Cursor Settings (`Cmd/Ctrl + Shift + J`).
+2. Go to **Features** > **MCP Servers**.
+3. Click **+ Add new MCP server** and set:
+   - Type: `command`
+   - Name: `screenshot-mcp`
+   - Command: `/absolute/path/to/screenshot-mcp`
+
+### GitHub Copilot (VS Code)
+
+1. Open your VS Code `settings.json`.
+2. Add the server to Copilot's experimental MCP mapping:
+
+```json
+{
+  "github.copilot.chat.experimental.mcp.servers": {
+    "screenshot-mcp": {
+      "command": "/absolute/path/to/screenshot-mcp"
+    }
+  }
+}
+```
+*Note: Make sure to restart your editor or AI client after adding the configuration for the server to spin up correctly.*
 
