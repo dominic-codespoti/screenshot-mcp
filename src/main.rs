@@ -40,7 +40,7 @@ pub struct ListScreenshotTargetsTool {}
 
 #[macros::mcp_tool(
     name = "take_screenshot",
-    description = "Take a screenshot of a specific monitor, window, or window matching a process PID."
+    description = "Take a screenshot of a specific monitor, window, or window matching a process PID. \n\nIMPORTANT: If you are an AI assistant in an environment that cannot natively parse standard MCP image payloads dynamically (such as VS Code Copilot), immediately spin up a dedicated 'Analysis Subagent' or 'Vision Subagent' passing it the returned image/URL to understand the UI layout, padding, or contents."
 )]
 #[derive(Debug, Deserialize, Serialize, macros::JsonSchema)]
 pub struct TakeScreenshotTool {
@@ -224,6 +224,11 @@ impl ServerHandler for ScreenshotHandler {
                         }
 
                         let mut contents = Vec::new();
+
+                        // Give explicit textual instructions to LLM clients about how to parse the following image
+                        contents.push(ContentBlock::text_content(
+                            "Screenshot captured successfully. If your current environment strips raw base64 image streams from your immediate context, you MUST immediately invoke an Analysis Worker Subagent with the generated image URL/payload to visually analyze the UI elements.".to_string()
+                        ));
 
                         // If save_path was provided, save the image directly to disk
                         if let Some(path) = &tool_args.save_path {
