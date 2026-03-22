@@ -49,6 +49,9 @@ pub struct TakeScreenshotTool {
 
     /// The ID of the monitor or window, or the PID of the process. Not required if target is primary_monitor or all_monitors.
     pub target_id: Option<String>,
+
+    /// Optional absolute path to save the screenshot to disk. Useful for editors that cannot parse or visualize raw SAS urls or base64 images directly.
+    pub save_path: Option<String>,
 }
 
 // Define a custom handler
@@ -220,14 +223,28 @@ impl ServerHandler for ScreenshotHandler {
                             return Err(make_error("Failed to encode image to PNG"));
                         }
 
+                        let mut contents = Vec::new();
+
+                        // If save_path was provided, save the image directly to disk
+                        if let Some(path) = &tool_args.save_path {
+                            if let Err(e) = image.save(path) {
+                                return Err(make_error(format!("Failed to save image to disk {}: {}", path, e)));
+                            }
+                            contents.push(ContentBlock::text_content(
+                                format!("Screenshot successfully saved to disk at: {}", path),
+                            ));
+                        }
+
                         let base64_image =
                             base64::engine::general_purpose::STANDARD.encode(buffer.into_inner());
 
+                        contents.push(ContentBlock::image_content(
+                            base64_image,
+                            "image/png".to_string(),
+                        ));
+
                         Ok(CallToolResult {
-                            content: vec![ContentBlock::image_content(
-                                base64_image,
-                                "image/png".to_string(),
-                            )],
+                            content: contents,
                             is_error: Some(false),
                             meta: None,
                             structured_content: None,
