@@ -14,7 +14,7 @@ cargo install screenshot-mcp
 
 ## Adding to AI Clients
 
-Because this server interacts purely through the standardized `stdio` MCP transport, you can plug it into any compatible AI assistant. The configuration uses `sh -c "cargo install screenshot-mcp && screenshot-mcp"` as its launch command, ensuring that the crate is safely and idempotently downloaded & executed from `~/.cargo/bin`.
+Because this server interacts purely through the standardized `stdio` MCP transport, you can plug it into any compatible AI assistant. The configuration uses a standard shell one-liner to ensure the binary is installed securely and only compiled if it hasn't been already.
 
 ### Claude Desktop
 
@@ -28,7 +28,7 @@ Because this server interacts purely through the standardized `stdio` MCP transp
   "mcpServers": {
     "screenshot-mcp": {
       "command": "sh",
-      "args": ["-c", "cargo install screenshot-mcp && screenshot-mcp"]
+      "args": ["-c", "command -v screenshot-mcp >/dev/null 2>&1 || cargo install screenshot-mcp; screenshot-mcp"]
     }
   }
 }
@@ -41,7 +41,7 @@ Because this server interacts purely through the standardized `stdio` MCP transp
 3. Click **+ Add new MCP server** and set:
    - Type: `command`
    - Name: `screenshot-mcp`
-   - Command: `sh -c "cargo install screenshot-mcp && screenshot-mcp"`
+   - Command: `sh -c "command -v screenshot-mcp >/dev/null 2>&1 || cargo install screenshot-mcp; screenshot-mcp"`
 
 ### GitHub Copilot (VS Code)
 
@@ -53,10 +53,10 @@ Because this server interacts purely through the standardized `stdio` MCP transp
   "github.copilot.chat.experimental.mcp.servers": {
     "screenshot-mcp": {
       "command": "sh",
-      "args": ["-c", "cargo install screenshot-mcp && screenshot-mcp"]
+      "args": ["-c", "command -v screenshot-mcp >/dev/null 2>&1 || cargo install screenshot-mcp; screenshot-mcp"]
     }
   }
 }
 ```
-*Note: Make sure to restart your editor or AI client after adding the configuration for the server to spin up correctly. The very first time it runs, Cargo will compile the binary, which may take ~30-60 seconds. Subsequent boots will be practically instant!*
+*Note: The first time Copilot or Claude connects, if you haven't run the tool yet, Cargo will do a one-time build that takes around ~30-60 seconds. Every subsequent boot will be instant!*
 
