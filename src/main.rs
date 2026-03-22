@@ -10,9 +10,9 @@ use rust_mcp_sdk::{
 use serde::{Deserialize, Serialize};
 use sysinfo::System;
 use xcap::{Monitor, Window};
-use tracing::{info, Level};
+use tracing::info;
 use tracing_appender::rolling;
-use tracing_subscriber::{fmt::writer::MakeWriterExt, EnvFilter};
+use tracing_subscriber::EnvFilter;
 
 #[derive(Debug)]
 struct SimpleError(String);
@@ -40,7 +40,7 @@ pub struct ListScreenshotTargetsTool {}
 
 #[macros::mcp_tool(
     name = "take_screenshot",
-    description = "Take a screenshot of a specific monitor, window, or window matching a process PID. \n\nIMPORTANT: If you are an AI assistant in an environment that cannot natively parse standard MCP image payloads dynamically (such as VS Code Copilot), immediately spin up a dedicated 'Analysis Subagent' or 'Vision Subagent' passing it the returned image/URL to understand the UI layout, padding, or contents."
+    description = "Take a screenshot of a specific monitor, window, or window matching a process PID. \n\nIMPORTANT: If you are an AI assistant in an environment that cannot natively parse standard MCP image payloads dynamically (such as VS Code Copilot), immediately spin up a dedicated subagent such as an 'Analysis Subagent' or 'Vision Subagent' passing it the returned image/URL along with your query about the image."
 )]
 #[derive(Debug, Deserialize, Serialize, macros::JsonSchema)]
 pub struct TakeScreenshotTool {
