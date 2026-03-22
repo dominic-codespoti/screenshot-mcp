@@ -19,3 +19,6 @@ sysinfo = "0.33.1"
 tokio = { version = "1.37.0", features = ["full", "macros", "rt-multi-thread"] }
 xcap = { version = "0.9", features = ["image"] }
 mcp-sdk = "0.0.3"
+tracing = "0.1.44"
+tracing-appender = "0.2.4"
+tracing-subscriber = { version = "0.3.23", features = ["env-filter"] }

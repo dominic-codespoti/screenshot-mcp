@@ -10,6 +10,9 @@ use rust_mcp_sdk::{
 use serde::{Deserialize, Serialize};
 use sysinfo::System;
 use xcap::{Monitor, Window};
+use tracing::{info, Level};
+use tracing_appender::rolling;
+use tracing_subscriber::{fmt::writer::MakeWriterExt, EnvFilter};
 
 #[derive(Debug)]
 struct SimpleError(String);
@@ -242,6 +245,16 @@ impl ServerHandler for ScreenshotHandler {
 
 #[tokio::main]
 async fn main() -> SdkResult<()> {
+    // Set up logging to a file so it doesn't pollute stdout
+    let file_appender = rolling::daily("/tmp", "screenshot-mcp.log");
+    tracing_subscriber::fmt()
+        .with_env_filter(EnvFilter::from_default_env().add_directive(tracing::Level::DEBUG.into()))
+        .with_writer(file_appender)
+        .with_ansi(false)
+        .init();
+
+    info!("Starting screenshot-mcp server...");
+
     // Define server details and capabilities
     let server_info = InitializeResult {
         server_info: Implementation {
@@ -256,7 +269,9 @@ async fn main() -> SdkResult<()> {
             tools: Some(ServerCapabilitiesTools { list_changed: None }),
             ..Default::default()
         },
-        protocol_version: ProtocolVersion::V2024_11_05.to_string(),
+        // We set the protocol version high enough to satisfy Copilot's non-standard `2025-11-25` string comparisons
+        // while also gracefully downgrading for standard 2024-11-05 clients (due to rust-mcp-sdk's strict `cmp`).
+        protocol_version: "2025-11-25".to_string(),
         instructions: None,
         meta: None,
     };
